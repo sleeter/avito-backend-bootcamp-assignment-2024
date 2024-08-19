@@ -2,6 +2,7 @@ package main
 
 import (
 	http_server "backend-bootcamp-assignment-2024/internal/http-server"
+	"backend-bootcamp-assignment-2024/internal/model/entity"
 	"backend-bootcamp-assignment-2024/internal/pkg/pgdb"
 	"backend-bootcamp-assignment-2024/internal/repository"
 	"backend-bootcamp-assignment-2024/internal/service"
@@ -9,6 +10,7 @@ import (
 	"context"
 	"database/sql"
 	"errors"
+	"github.com/hashicorp/golang-lru/v2/expirable"
 	"github.com/jackc/pgx/v4/pgxpool"
 	"log"
 	"time"
@@ -46,8 +48,10 @@ func main() {
 	qm := pgdb.NewQueryManager(pool)
 	tm := pgdb.NewTransactionManager(pool)
 
+	cacheForFlat := expirable.NewLRU[int32, []entity.Flat](0, nil, time.Duration(60)*time.Second)
+
 	hRepo := repository.NewHouseRepository(qm)
-	fRepo := repository.NewFlatRepository(qm)
+	fRepo := repository.NewFlatRepository(qm, cacheForFlat)
 	uRepo := repository.NewUserRepository(qm)
 	sRepo := repository.NewSubscriberRepository(qm)
 
