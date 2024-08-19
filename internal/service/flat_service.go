@@ -16,15 +16,17 @@ type FlatRepository interface {
 }
 
 type FlatService struct {
-	HouseRepository    HouseRepository
+	HouseService       HouseService
+	SubscriberService  SubscriberService
 	FlatRepository     FlatRepository
 	TransactionManager TransactionManager
 }
 
-func NewFlatService(fr FlatRepository, hr HouseRepository, manager TransactionManager) FlatService {
+func NewFlatService(fr FlatRepository, hs HouseService, ss SubscriberService, manager TransactionManager) FlatService {
 	return FlatService{
 		FlatRepository:     fr,
-		HouseRepository:    hr,
+		HouseService:       hs,
+		SubscriberService:  ss,
 		TransactionManager: manager,
 	}
 }
@@ -47,16 +49,22 @@ func (s *FlatService) AddFlat(ctx context.Context, flat request.CreateFlat) (*re
 			return err
 		}
 
-		err = s.HouseRepository.UpdateHouse(ctx, flat.HouseId, time.Now())
+		err = s.HouseService.UpdateHouse(ctx, flat.HouseId, time.Now())
 		if err != nil {
 			return err
 		}
 		return nil
 	})
+
 	if err != nil {
 		return nil, err
 	}
-
+	go func() {
+		err := s.SubscriberService.SendMessageToSubscribers(ctx, flat.HouseId)
+		if err != nil {
+			//TODO log error
+		}
+	}()
 	return mapper.FlatEntityToFlatResponse(&res), nil
 }
 
