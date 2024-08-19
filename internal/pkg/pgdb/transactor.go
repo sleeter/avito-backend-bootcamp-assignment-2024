@@ -2,16 +2,11 @@ package pgdb
 
 import (
 	"context"
-
 	"github.com/jackc/pgx/v4/pgxpool"
 )
 
 type TransactionManager struct {
 	pool *pgxpool.Pool
-}
-type TransactionManagerInterface interface {
-	ReadonlyTx(ctx context.Context, callback TransactionCallback) error
-	Tx(ctx context.Context, callback TransactionCallback) error
 }
 
 func NewTransactionManager(pool *pgxpool.Pool) *TransactionManager {
