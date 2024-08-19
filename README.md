@@ -1,3 +1,4 @@
+![GoBuild](https://github.com/sleeter/avito-backend-bootcamp-assignment-2024/actions/workflows/build.yml/badge.svg?branch=main)
 # Бэкенд для сервиса домов
 
 ## Описание
