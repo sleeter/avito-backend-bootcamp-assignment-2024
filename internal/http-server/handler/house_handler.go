@@ -100,7 +100,6 @@ func SubscribeHouse(ctx *gin.Context, service *service.Service) error {
 		return nil
 	}
 	req.HouseId = int32(houseId)
-	//TODO: validate email
 	err = validateSubscribeHouseFields(req)
 	if err != nil {
 		log.Println(err.Error())

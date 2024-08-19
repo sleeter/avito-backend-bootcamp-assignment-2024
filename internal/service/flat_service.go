@@ -5,6 +5,7 @@ package service
 import (
 	"context"
 	"fmt"
+	"log"
 	"time"
 
 	"backend-bootcamp-assignment-2024/internal/mapper"
@@ -67,7 +68,8 @@ func (s *FlatService) AddFlat(ctx context.Context, flat request.CreateFlat) (*re
 	go func() {
 		err := s.SubscriberService.SendMessageToSubscribers(ctx, flat.HouseId)
 		if err != nil {
-			//TODO log error
+			log.SetPrefix("service.AddFlat")
+			log.Println(err.Error())
 		}
 	}()
 	return mapper.FlatEntityToFlatResponse(&res), nil
