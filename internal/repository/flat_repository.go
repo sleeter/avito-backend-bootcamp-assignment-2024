@@ -89,3 +89,18 @@ func (r *FlatRepository) UpdateFlatStatus(ctx context.Context, flat request.Upda
 	}
 	return &flats[0], nil
 }
+
+func (r *FlatRepository) GetFlatById(ctx context.Context, id int32) (*entity.Flat, error) {
+	q := sq.Select("*").
+		From("flats").
+		Where(sq.Eq{"id": id}).
+		PlaceholderFormat(sq.Dollar)
+	flat, err := r.executeQuery(ctx, q)
+	if err != nil {
+		return nil, err
+	}
+	if len(flat) != 1 {
+		return nil, errors.New("something went wrong with get flat")
+	}
+	return &flat[0], nil
+}
