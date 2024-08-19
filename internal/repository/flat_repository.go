@@ -11,10 +11,14 @@ import (
 
 type FlatRepository struct {
 	QueryManager QueryManager
+	Cache        CacheForFlat
 }
 
-func NewFlatRepository(manager QueryManager) *FlatRepository {
-	return &FlatRepository{QueryManager: manager}
+func NewFlatRepository(manager QueryManager, cache CacheForFlat) *FlatRepository {
+	return &FlatRepository{
+		QueryManager: manager,
+		Cache:        cache,
+	}
 }
 
 func (r *FlatRepository) executeQuery(ctx context.Context, query sq.Sqlizer) ([]entity.Flat, error) {
@@ -47,6 +51,12 @@ func toFlat(rows pgx.Rows) (entity.Flat, error) {
 }
 
 func (r *FlatRepository) GetFlatsByHouseId(ctx context.Context, houseId int32, isModerator bool) ([]entity.Flat, error) {
+	if r.Cache.Contains(houseId) {
+		res, ok := r.Cache.Get(houseId)
+		if ok {
+			return res, nil
+		}
+	}
 	q := sq.Select("*").
 		From("flats").
 		Where(sq.Eq{"house_id": houseId}).
@@ -57,6 +67,9 @@ func (r *FlatRepository) GetFlatsByHouseId(ctx context.Context, houseId int32, i
 	flats, err := r.executeQuery(ctx, q)
 	if err != nil {
 		return nil, err
+	}
+	if len(flats) != 0 {
+		r.Cache.Add(houseId, flats)
 	}
 	return flats, nil
 }
