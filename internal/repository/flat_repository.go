@@ -1,8 +1,8 @@
 package repository
 
 import (
-	"backend-bootcamp-assignment-2024/internal/models/dto/request"
-	"backend-bootcamp-assignment-2024/internal/models/entity"
+	"backend-bootcamp-assignment-2024/internal/model/dto/request"
+	"backend-bootcamp-assignment-2024/internal/model/entity"
 	"context"
 	"errors"
 	sq "github.com/Masterminds/squirrel"
@@ -39,7 +39,7 @@ func (r *FlatRepository) executeQuery(ctx context.Context, query sq.Sqlizer) ([]
 
 func toFlat(rows pgx.Rows) (entity.Flat, error) {
 	var flat entity.Flat
-	err := rows.Scan(&flat.Id, &flat.House_id, &flat.Number, &flat.Price, &flat.Rooms, &flat.Status)
+	err := rows.Scan(&flat.Id, &flat.HouseId, &flat.Number, &flat.Price, &flat.Rooms, &flat.Status)
 	if err != nil {
 		return entity.Flat{}, err
 	}
@@ -61,31 +61,31 @@ func (r *FlatRepository) GetFlats(ctx context.Context, houseId int32, isModerato
 	return flats, nil
 }
 
-func (r *FlatRepository) AddFlat(ctx context.Context, flat request.Flat) (entity.Flat, error) {
+func (r *FlatRepository) CreateFlat(ctx context.Context, flat request.Flat) (*entity.Flat, error) {
 	q := sq.Insert("flats").
 		Columns("house_id", "price", "rooms", "status").
 		Values(flat.HouseId, flat.Price, flat.Rooms, flat.Status).
 		Suffix("RETURNING *").PlaceholderFormat(sq.Dollar)
 	flats, err := r.executeQuery(ctx, q)
 	if err != nil {
-		return entity.Flat{}, err
+		return nil, err
 	}
 	if len(flats) != 1 {
-		return entity.Flat{}, errors.New("something went wrong with insert flat")
+		return nil, errors.New("something went wrong with insert flat")
 	}
-	return flats[0], nil
+	return &flats[0], nil
 }
-func (r *FlatRepository) UpdateFlatStatus(ctx context.Context, flat request.Flat) (entity.Flat, error) {
+func (r *FlatRepository) UpdateFlatStatus(ctx context.Context, flat request.Flat) (*entity.Flat, error) {
 	q := sq.Update("flats").
 		Set("status", flat.Status).
 		Where(sq.Eq{"id": flat.Id}).
 		Suffix("RETURNING *")
 	flats, err := r.executeQuery(ctx, q)
 	if err != nil {
-		return entity.Flat{}, err
+		return nil, err
 	}
 	if len(flats) != 1 {
-		return entity.Flat{}, errors.New("something went wrong with update flat")
+		return nil, errors.New("something went wrong with update flat")
 	}
-	return flats[0], nil
+	return &flats[0], nil
 }

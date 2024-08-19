@@ -1,8 +1,8 @@
 package repository
 
 import (
-	"backend-bootcamp-assignment-2024/internal/models/dto/request"
-	"backend-bootcamp-assignment-2024/internal/models/entity"
+	"backend-bootcamp-assignment-2024/internal/model/dto/request"
+	"backend-bootcamp-assignment-2024/internal/model/entity"
 	"context"
 	"errors"
 	sq "github.com/Masterminds/squirrel"

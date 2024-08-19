@@ -1,8 +1,8 @@
 package repository
 
 import (
-	"backend-bootcamp-assignment-2024/internal/models/dto/request"
-	"backend-bootcamp-assignment-2024/internal/models/entity"
+	"backend-bootcamp-assignment-2024/internal/model/dto/request"
+	"backend-bootcamp-assignment-2024/internal/model/entity"
 	"context"
 	"errors"
 	sq "github.com/Masterminds/squirrel"
@@ -65,9 +65,9 @@ func (r *HouseRepository) CreateHouse(ctx context.Context, house request.House) 
 	return houses[0], nil
 }
 
-func (r *HouseRepository) UpdateHouse(ctx context.Context, houseId int32, status string) error {
+func (r *HouseRepository) UpdateHouse(ctx context.Context, houseId int32, updateTime time.Time) error {
 	q := sq.Update("houses").
-		Set("status", status).
+		Set("update_time", updateTime).
 		Where(sq.Eq{"id": houseId}).
 		PlaceholderFormat(sq.Dollar)
 	_, err := r.executeQuery(ctx, q)
