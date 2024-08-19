@@ -4,6 +4,7 @@ import (
 	"backend-bootcamp-assignment-2024/internal/model/dto/request"
 	"backend-bootcamp-assignment-2024/internal/model/entity"
 	"context"
+	"errors"
 	sq "github.com/Masterminds/squirrel"
 	"github.com/jackc/pgx/v4"
 )
@@ -60,10 +61,14 @@ func (r *SubscriberRepository) AddSub(ctx context.Context, req request.Subscribe
 	q := sq.Insert("subscribers").
 		Columns("house_id", "email").
 		Values(req.HouseId, req.Email).
+		Suffix("RETURNING *").
 		PlaceholderFormat(sq.Dollar)
-	_, err := r.executeQuery(ctx, q)
+	res, err := r.executeQuery(ctx, q)
 	if err != nil {
 		return err
+	}
+	if len(res) != 1 {
+		return errors.New("something went wrong with insert subscriber")
 	}
 	return nil
 }
