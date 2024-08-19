@@ -1,9 +1,10 @@
+//go:generate mockgen -source ./subscriber_service.go -destination=./mocks/subscriber_service.go -package=mock_service
+
 package service
 
 import (
 	"backend-bootcamp-assignment-2024/internal/model/dto/request"
 	"backend-bootcamp-assignment-2024/internal/model/entity"
-	"backend-bootcamp-assignment-2024/pkg/sender"
 	"context"
 	"fmt"
 )
@@ -13,13 +14,17 @@ type SubscriberRepository interface {
 	AddSub(ctx context.Context, req request.Subscriber) error
 }
 
+type Sender interface {
+	SendEmail(ctx context.Context, recipient string, message string) error
+}
+
 type SubscriberService struct {
 	Repository         SubscriberRepository
 	TransactionManager TransactionManager
-	Sender             *sender.Sender
+	Sender             Sender
 }
 
-func NewSubscriberService(r SubscriberRepository, manager TransactionManager, sender *sender.Sender) SubscriberService {
+func NewSubscriberService(r SubscriberRepository, manager TransactionManager, sender Sender) SubscriberService {
 	return SubscriberService{
 		Repository:         r,
 		TransactionManager: manager,

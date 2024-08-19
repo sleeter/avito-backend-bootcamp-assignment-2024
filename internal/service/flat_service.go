@@ -1,3 +1,5 @@
+//go:generate mockgen -source ./flat_service.go -destination=./mocks/flat_service.go -package=mock_service
+
 package service
 
 import (
@@ -6,6 +8,7 @@ import (
 	"backend-bootcamp-assignment-2024/internal/model/dto/response"
 	"backend-bootcamp-assignment-2024/internal/model/entity"
 	"context"
+	"fmt"
 	"time"
 )
 
@@ -13,6 +16,7 @@ type FlatRepository interface {
 	GetFlatsByHouseId(ctx context.Context, houseId int32, isModerator bool) ([]entity.Flat, error)
 	CreateFlat(ctx context.Context, flat request.CreateFlat) (*entity.Flat, error)
 	UpdateFlatStatus(ctx context.Context, flat request.UpdateFlat) (*entity.Flat, error)
+	GetFlatById(ctx context.Context, id int32) (*entity.Flat, error)
 }
 
 type FlatService struct {
@@ -72,12 +76,30 @@ func (s *FlatService) UpdateFlat(ctx context.Context, flat request.UpdateFlat) (
 	if len(flat.Status) == 0 {
 		flat.Status = entity.FLATSTATUS_ON_MODERATION
 	}
-	//TODO: may be add check to created status before update and response 409
-	res, err := s.FlatRepository.UpdateFlatStatus(ctx, flat)
+	res, err := s.FlatRepository.GetFlatById(ctx, flat.Id)
+	if err != nil {
+		return nil, err
+	}
+	if !validRequestAndEntityStatus(flat, *res) {
+		return nil, fmt.Errorf("can not change status from %s to %s", res.Status, flat.Status)
+	}
+	res, err = s.FlatRepository.UpdateFlatStatus(ctx, flat)
 	if err != nil {
 		return nil, err
 	}
 	return mapper.FlatEntityToFlatResponse(res), nil
+}
+func validRequestAndEntityStatus(flat request.UpdateFlat, ent entity.Flat) bool {
+	if flat.Status == ent.Status {
+		return true
+	}
+	if flat.Status == entity.FLATSTATUS_ON_MODERATION && ent.Status != entity.FLATSTATUS_CREATED {
+		return false
+	}
+	if ent.Status == entity.FLATSTATUS_CREATED && flat.Status != entity.FLATSTATUS_ON_MODERATION {
+		return false
+	}
+	return true
 }
 
 func (s *FlatService) GetFlats(ctx context.Context, houseId int32, isModerator bool) ([]response.Flat, error) {
