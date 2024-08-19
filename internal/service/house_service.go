@@ -1,6 +1,16 @@
 package service
 
-type HouseRepository interface{}
+import (
+	"backend-bootcamp-assignment-2024/internal/model/dto/request"
+	"backend-bootcamp-assignment-2024/internal/model/entity"
+	"context"
+	"time"
+)
+
+type HouseRepository interface {
+	CreateHouse(ctx context.Context, house request.House) (entity.House, error)
+	UpdateHouse(ctx context.Context, houseId int32, updateTime time.Time) error
+}
 
 type HouseService struct {
 	Repository         HouseRepository
