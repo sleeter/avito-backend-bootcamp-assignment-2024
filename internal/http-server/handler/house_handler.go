@@ -22,6 +22,7 @@ func GetHouse(ctx *gin.Context, service *service.Service) error {
 		ctx.Status(http.StatusBadRequest)
 		return nil
 	}
+	//TODO: try to find house in db
 	resp, err := service.FlatService.GetFlats(ctx, int32(houseId), isModerator)
 	if err != nil {
 		return err
@@ -40,7 +41,7 @@ func validateGetHouseFields(houseId int64) error {
 
 func CreateHouse(ctx *gin.Context, service *service.Service) error {
 	var req request.House
-	if err := ctx.ShouldBind(&req); err != nil {
+	if err := ctx.Bind(&req); err != nil {
 		ctx.Status(http.StatusBadRequest)
 		return nil
 	}
@@ -70,5 +71,33 @@ func validateCreateHouseField(req request.House) error {
 }
 
 func SubscribeHouse(ctx *gin.Context, service *service.Service) error {
+	houseId, err := strconv.ParseInt(ctx.Param("id"), 10, 0)
+	if err != nil {
+		ctx.Status(http.StatusBadRequest)
+		return nil
+	}
+	var req request.Subscriber
+	if err := ctx.Bind(&req); err != nil {
+		ctx.Status(http.StatusBadRequest)
+		return nil
+	}
+	req.HouseId = int32(houseId)
+	//TODO: validate email
+	err = validateSubscribeHouseFields(req)
+	if err != nil {
+		ctx.Status(http.StatusBadRequest)
+		return nil
+	}
+	err = service.SubscriberService.CreateSubscriber(ctx, req)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func validateSubscribeHouseFields(req request.Subscriber) error {
+	if req.HouseId <= 0 {
+		return errors.New("house id must be greater than 0")
+	}
 	return nil
 }
