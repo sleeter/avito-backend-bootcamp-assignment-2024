@@ -10,6 +10,7 @@ import (
 	"database/sql"
 	"errors"
 	"github.com/jackc/pgx/v4/pgxpool"
+	"log"
 	"time"
 
 	"backend-bootcamp-assignment-2024/internal/core"
@@ -25,26 +26,22 @@ import (
 func main() {
 	ctx := context.Background()
 
-	//TODO: logger
-
-	//TODO: config
 	loader := config.PrepareLoader(config.WithConfigPath("./config/config.yaml"))
 	cfg, err := core.ParseConfig(loader)
 	if err != nil {
-
+		log.Fatal(err)
 	}
 
-	//TODO: repo, migrations
 	err = retry.Do(func() error {
 		return UpMigrations(cfg)
 	}, retry.Attempts(4), retry.Delay(2*time.Second))
 	if err != nil {
-
+		log.Fatal(err)
 	}
 
 	pool, err := pgxpool.Connect(ctx, cfg.Storage.URL)
 	if err != nil {
-
+		log.Fatal(err)
 	}
 	qm := pgdb.NewQueryManager(pool)
 	tm := pgdb.NewTransactionManager(pool)
@@ -54,14 +51,12 @@ func main() {
 	uRepo := repository.NewUserRepository(qm)
 	sRepo := repository.NewSubscriberRepository(qm)
 
-	//TODO: service
-	hService := service.NewHouseService(hRepo, tm)
 	s := sender.New()
+	hService := service.NewHouseService(hRepo, tm)
 	sService := service.NewSubscriberService(sRepo, tm, s)
 	fService := service.NewFlatService(fRepo, hService, sService, tm)
 	uService := service.NewUserService(uRepo, tm)
 
-	//TODO: server
 	app := http_server.New(&service.Service{
 		HouseService:      hService,
 		FlatService:       fService,
@@ -70,7 +65,7 @@ func main() {
 	}, cfg)
 
 	if err := app.Start(ctx); err != nil {
-
+		log.Fatal(err)
 	}
 
 	//TODO: graceful shutdown
