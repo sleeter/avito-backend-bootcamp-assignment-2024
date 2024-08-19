@@ -2,6 +2,7 @@ package handler
 
 import (
 	"backend-bootcamp-assignment-2024/internal/model/dto/request"
+	"backend-bootcamp-assignment-2024/internal/model/entity"
 	"backend-bootcamp-assignment-2024/internal/service"
 	"errors"
 	"github.com/gin-gonic/gin"
@@ -15,9 +16,8 @@ func GetHouse(ctx *gin.Context, service *service.Service) error {
 		ctx.Status(http.StatusBadRequest)
 		return nil
 	}
-	//TODO: add middleware and param to ctx, get isModerator from ctx
-	isModerator := false
-	err = validateGetHouseFields(houseId)
+	userType := ctx.GetString("User-Type")
+	isModerator, err := validateGetHouseFields(houseId, userType)
 	if err != nil {
 		ctx.Status(http.StatusBadRequest)
 		return nil
@@ -32,11 +32,16 @@ func GetHouse(ctx *gin.Context, service *service.Service) error {
 	})
 	return nil
 }
-func validateGetHouseFields(houseId int64) error {
+func validateGetHouseFields(houseId int64, userType string) (bool, error) {
 	if houseId <= 0 {
-		return errors.New("house id must be greater than 0")
+		return false, errors.New("house id must be greater than 0")
 	}
-	return nil
+	if len(userType) == 0 {
+		return false, errors.New("user type can not be empty")
+	} else if userType == entity.USERTYPE_MODERATOR {
+		return true, nil
+	}
+	return false, nil
 }
 
 func CreateHouse(ctx *gin.Context, service *service.Service) error {
