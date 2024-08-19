@@ -33,3 +33,7 @@ func (s *HouseService) CreateHouse(ctx context.Context, house request.House) (*r
 	}
 	return mapper.HouseEntityToHouseResponse(res), nil
 }
+
+func (s *HouseService) UpdateHouse(ctx context.Context, houseId int32, updateTime time.Time) error {
+	return s.Repository.UpdateHouse(ctx, houseId, updateTime)
+}
