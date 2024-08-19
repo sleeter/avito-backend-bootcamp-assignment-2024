@@ -40,34 +40,32 @@ func (r *HouseRepository) executeQuery(ctx context.Context, query sq.Sqlizer) ([
 
 func toHouse(rows pgx.Rows) (entity.House, error) {
 	var house entity.House
-	err := rows.Scan(&house.Id, &house.Address, &house.Year, &house.Developer, &house.CreationDate, &house.UpdateDate)
+	err := rows.Scan(&house.Id, &house.Address, &house.Year, &house.Developer, &house.CreatedAt, &house.UpdateAt)
 	if err != nil {
 		return entity.House{}, err
 	}
 	return house, nil
 }
 
-func (r *HouseRepository) CreateHouse(ctx context.Context, house request.House) (entity.House, error) {
+func (r *HouseRepository) CreateHouse(ctx context.Context, house request.House) (*entity.House, error) {
+	t := time.Now()
 	q := sq.Insert("houses").
-		Columns("address", "year", "creation_date", "update_date").
-		Values(house.Address, house.Year, time.Now(), time.Now()).
+		Columns("address", "year", "developer", "created_at", "update_at").
+		Values(house.Address, house.Year, house.Developer, t, t).
 		PlaceholderFormat(sq.Dollar).Suffix("RETURNING *")
-	if house.Developer != "" {
-		q.Columns("developer").Values(house.Developer)
-	}
 	houses, err := r.executeQuery(ctx, q)
 	if err != nil {
-		return entity.House{}, err
+		return nil, err
 	}
 	if len(houses) != 1 {
-		return entity.House{}, errors.New("something went wrong with create house")
+		return nil, errors.New("something went wrong with create house")
 	}
-	return houses[0], nil
+	return &houses[0], nil
 }
 
 func (r *HouseRepository) UpdateHouse(ctx context.Context, houseId int32, updateTime time.Time) error {
 	q := sq.Update("houses").
-		Set("update_time", updateTime).
+		Set("update_at", updateTime).
 		Where(sq.Eq{"id": houseId}).
 		PlaceholderFormat(sq.Dollar)
 	_, err := r.executeQuery(ctx, q)

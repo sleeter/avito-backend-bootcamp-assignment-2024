@@ -46,12 +46,12 @@ func toFlat(rows pgx.Rows) (entity.Flat, error) {
 	return flat, nil
 }
 
-func (r *FlatRepository) GetFlats(ctx context.Context, houseId int32, isModerator bool) ([]entity.Flat, error) {
+func (r *FlatRepository) GetFlatsByHouseId(ctx context.Context, houseId int32, isModerator bool) ([]entity.Flat, error) {
 	q := sq.Select("*").
 		From("flats").
 		Where(sq.Eq{"house_id": houseId}).
 		PlaceholderFormat(sq.Dollar)
-	if !isModerator {
+	if isModerator {
 		q = q.Where(sq.Eq{"status": entity.FLATSTATUS_APPROVED})
 	}
 	flats, err := r.executeQuery(ctx, q)
@@ -61,7 +61,7 @@ func (r *FlatRepository) GetFlats(ctx context.Context, houseId int32, isModerato
 	return flats, nil
 }
 
-func (r *FlatRepository) CreateFlat(ctx context.Context, flat request.Flat) (*entity.Flat, error) {
+func (r *FlatRepository) CreateFlat(ctx context.Context, flat request.CreateFlat) (*entity.Flat, error) {
 	q := sq.Insert("flats").
 		Columns("house_id", "price", "rooms", "status").
 		Values(flat.HouseId, flat.Price, flat.Rooms, flat.Status).
@@ -75,11 +75,11 @@ func (r *FlatRepository) CreateFlat(ctx context.Context, flat request.Flat) (*en
 	}
 	return &flats[0], nil
 }
-func (r *FlatRepository) UpdateFlatStatus(ctx context.Context, flat request.Flat) (*entity.Flat, error) {
+func (r *FlatRepository) UpdateFlatStatus(ctx context.Context, flat request.UpdateFlat) (*entity.Flat, error) {
 	q := sq.Update("flats").
 		Set("status", flat.Status).
 		Where(sq.Eq{"id": flat.Id}).
-		Suffix("RETURNING *")
+		Suffix("RETURNING *").PlaceholderFormat(sq.Dollar)
 	flats, err := r.executeQuery(ctx, q)
 	if err != nil {
 		return nil, err
