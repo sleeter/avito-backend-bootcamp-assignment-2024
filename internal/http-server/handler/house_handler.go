@@ -6,25 +6,29 @@ import (
 	"backend-bootcamp-assignment-2024/internal/service"
 	"errors"
 	"github.com/gin-gonic/gin"
+	"log"
 	"net/http"
 	"strconv"
 )
 
 func GetHouse(ctx *gin.Context, service *service.Service) error {
+	log.SetPrefix("http-server.handler.GetHouse")
 	houseId, err := strconv.ParseInt(ctx.Param("id"), 10, 0)
 	if err != nil {
+		log.Println(err.Error())
 		ctx.Status(http.StatusBadRequest)
 		return nil
 	}
 	userType := ctx.GetString("User-Type")
 	isModerator, err := validateGetHouseFields(houseId, userType)
 	if err != nil {
+		log.Println(err.Error())
 		ctx.Status(http.StatusBadRequest)
 		return nil
 	}
-	//TODO: try to find house in db
 	resp, err := service.FlatService.GetFlats(ctx, int32(houseId), isModerator)
 	if err != nil {
+		log.Println(err.Error())
 		return err
 	}
 	ctx.JSON(http.StatusOK, gin.H{
@@ -45,18 +49,22 @@ func validateGetHouseFields(houseId int64, userType string) (bool, error) {
 }
 
 func CreateHouse(ctx *gin.Context, service *service.Service) error {
+	log.SetPrefix("http-server.handler.CreateHouse")
 	var req request.House
 	if err := ctx.Bind(&req); err != nil {
+		log.Println(err.Error())
 		ctx.Status(http.StatusBadRequest)
 		return nil
 	}
 	err := validateCreateHouseField(req)
 	if err != nil {
+		log.Println(err.Error())
 		ctx.Status(http.StatusBadRequest)
 		return nil
 	}
 	resp, err := service.HouseService.CreateHouse(ctx, req)
 	if err != nil {
+		log.Println(err.Error())
 		return err
 	}
 	ctx.JSON(http.StatusOK, resp)
@@ -76,13 +84,16 @@ func validateCreateHouseField(req request.House) error {
 }
 
 func SubscribeHouse(ctx *gin.Context, service *service.Service) error {
+	log.SetPrefix("http-server.handler.SubscribeHouse")
 	houseId, err := strconv.ParseInt(ctx.Param("id"), 10, 0)
 	if err != nil {
+		log.Println(err.Error())
 		ctx.Status(http.StatusBadRequest)
 		return nil
 	}
 	var req request.Subscriber
 	if err := ctx.Bind(&req); err != nil {
+		log.Println(err.Error())
 		ctx.Status(http.StatusBadRequest)
 		return nil
 	}
@@ -90,11 +101,13 @@ func SubscribeHouse(ctx *gin.Context, service *service.Service) error {
 	//TODO: validate email
 	err = validateSubscribeHouseFields(req)
 	if err != nil {
+		log.Println(err.Error())
 		ctx.Status(http.StatusBadRequest)
 		return nil
 	}
 	err = service.SubscriberService.CreateSubscriber(ctx, req)
 	if err != nil {
+		log.Println(err.Error())
 		return err
 	}
 	return nil

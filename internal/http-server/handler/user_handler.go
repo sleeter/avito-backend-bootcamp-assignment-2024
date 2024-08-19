@@ -6,23 +6,28 @@ import (
 	"backend-bootcamp-assignment-2024/internal/service"
 	"errors"
 	"github.com/gin-gonic/gin"
+	"log"
 	"net/http"
 	"slices"
 )
 
 func Register(ctx *gin.Context, service *service.Service) error {
+	log.SetPrefix("http-server.handler.Register")
 	var req request.Register
 	if err := ctx.Bind(&req); err != nil {
+		log.Println(err.Error())
 		ctx.Status(http.StatusBadRequest)
 		return nil
 	}
 	err := validateRegisterFields(req)
 	if err != nil {
+		log.Println(err.Error())
 		ctx.Status(http.StatusBadRequest)
 		return nil
 	}
 	resp, err := service.UserService.Register(ctx, req)
 	if err != nil {
+		log.Println(err.Error())
 		return err
 	}
 	ctx.JSON(http.StatusOK, resp)
@@ -43,18 +48,22 @@ func validateRegisterFields(req request.Register) error {
 }
 
 func Login(ctx *gin.Context, service *service.Service) error {
+	log.SetPrefix("http-server.handler.Login")
 	var req request.Login
 	if err := ctx.Bind(&req); err != nil {
+		log.Println(err.Error())
 		ctx.Status(http.StatusBadRequest)
 		return nil
 	}
 	err := validateLoginFields(req)
 	if err != nil {
+		log.Println(err.Error())
 		ctx.Status(http.StatusBadRequest)
 		return nil
 	}
 	resp, err := service.UserService.Login(ctx, req)
 	if err != nil {
+		log.Println(err.Error())
 		return err
 	}
 	ctx.JSON(http.StatusOK, resp)
@@ -72,15 +81,18 @@ func validateLoginFields(req request.Login) error {
 }
 
 func DummyLogin(ctx *gin.Context, service *service.Service) error {
+	log.SetPrefix("http-server.handler.DummyLogin")
 	var req request.DummyLogin
 	req.UserType = ctx.Query("user_type")
 	err := validateDummyLoginFields(req)
 	if err != nil {
+		log.Println(err.Error())
 		ctx.Status(http.StatusBadRequest)
 		return nil
 	}
 	resp, err := service.UserService.DummyLogin(ctx, req)
 	if err != nil {
+		log.Println(err.Error())
 		return err
 	}
 	ctx.JSON(http.StatusOK, resp)

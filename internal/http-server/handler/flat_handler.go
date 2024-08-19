@@ -6,23 +6,28 @@ import (
 	"backend-bootcamp-assignment-2024/internal/service"
 	"errors"
 	"github.com/gin-gonic/gin"
+	"log"
 	"net/http"
 	"slices"
 )
 
 func CreateFlat(ctx *gin.Context, service *service.Service) error {
+	log.SetPrefix("http-server.handler.CreateFlat")
 	var req request.CreateFlat
 	if err := ctx.Bind(&req); err != nil {
+		log.Println(err.Error())
 		ctx.Status(http.StatusBadRequest)
 		return nil
 	}
 	err := validateCreateFlatFields(req)
 	if err != nil {
+		log.Println(err.Error())
 		ctx.Status(http.StatusBadRequest)
 		return nil
 	}
 	resp, err := service.FlatService.AddFlat(ctx, req)
 	if err != nil {
+		log.Println(err.Error())
 		return err
 	}
 	ctx.JSON(http.StatusOK, resp)
@@ -43,18 +48,22 @@ func validateCreateFlatFields(req request.CreateFlat) error {
 }
 
 func UpdateFlat(ctx *gin.Context, service *service.Service) error {
+	log.SetPrefix("http-server.handler.UpdateFlat")
 	var req request.UpdateFlat
 	if err := ctx.Bind(&req); err != nil {
+		log.Println(err.Error())
 		ctx.Status(http.StatusBadRequest)
 		return nil
 	}
 	err := validateUpdateFlatFields(req)
 	if err != nil {
+		log.Println(err.Error())
 		ctx.Status(http.StatusBadRequest)
 		return nil
 	}
 	resp, err := service.FlatService.UpdateFlat(ctx, req)
 	if err != nil {
+		log.Println(err.Error())
 		return err
 	}
 	ctx.JSON(http.StatusOK, resp)
