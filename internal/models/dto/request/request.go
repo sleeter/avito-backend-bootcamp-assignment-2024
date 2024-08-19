@@ -14,9 +14,11 @@ type Login struct {
 }
 
 type Flat struct {
-	HouseId int32 `json:"house_id"`
-	Price   int32 `json:"price"`
-	Rooms   int32 `json:"rooms"`
+	Id      int32  `json:"id"`
+	HouseId int32  `json:"house_id"`
+	Price   int32  `json:"price"`
+	Rooms   int32  `json:"rooms"`
+	Status  string `json:"status"`
 }
 
 type House struct {
