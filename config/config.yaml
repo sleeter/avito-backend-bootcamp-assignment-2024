@@ -1,0 +1,4 @@
+server:
+  listen: ":8080"
+storage:
+  url: "postgres://postgres:password@db:5432/postgres?sslmode=disable"
