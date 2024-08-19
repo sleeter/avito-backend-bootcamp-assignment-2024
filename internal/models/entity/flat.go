@@ -8,3 +8,10 @@ type Flat struct {
 	Rooms    int32 `db:"rooms"`
 	Status   int32 `db:"status"`
 }
+
+const (
+	FLATSTATUS_CREATED       = "created"
+	FLATSTATUS_APPROVED      = "approved"
+	FLATSTATUS_DECLINED      = "declined"
+	FLATSTATUS_ON_MODERATION = "on_moderation"
+)
