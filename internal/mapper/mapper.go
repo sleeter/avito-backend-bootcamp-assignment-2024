@@ -14,3 +14,14 @@ func FlatEntityToFlatResponse(flat *entity.Flat) *response.Flat {
 		Status:  flat.Status,
 	}
 }
+
+func HouseEntityToHouseResponse(house *entity.House) *response.House {
+	return &response.House{
+		Id:        house.Id,
+		Address:   house.Address,
+		Year:      house.Year,
+		Developer: house.Developer,
+		CreatedAt: house.CreatedAt,
+		UpdateAt:  house.UpdateAt,
+	}
+}
