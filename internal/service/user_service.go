@@ -3,7 +3,7 @@ package service
 type UserRepository interface{}
 
 type UserService struct {
-	Repository         HouseRepository
+	Repository         UserRepository
 	TransactionManager TransactionManager
 }
 
