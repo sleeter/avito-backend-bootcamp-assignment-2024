@@ -2,10 +2,11 @@ package web
 
 import (
 	"context"
-	"github.com/gin-gonic/gin"
 	"net/http"
 	"sync/atomic"
 	"time"
+
+	"github.com/gin-gonic/gin"
 )
 
 // ServerConfig represents configuration for Server.

@@ -1,13 +1,15 @@
 package repository
 
 import (
-	"backend-bootcamp-assignment-2024/internal/model/dto/request"
-	"backend-bootcamp-assignment-2024/internal/model/entity"
 	"context"
 	"errors"
+	"time"
+
+	"backend-bootcamp-assignment-2024/internal/model/dto/request"
+	"backend-bootcamp-assignment-2024/internal/model/entity"
+
 	sq "github.com/Masterminds/squirrel"
 	"github.com/jackc/pgx/v4"
-	"time"
 )
 
 type HouseRepository struct {

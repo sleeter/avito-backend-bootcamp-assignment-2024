@@ -3,10 +3,11 @@
 package service
 
 import (
-	"backend-bootcamp-assignment-2024/internal/model/dto/request"
-	"backend-bootcamp-assignment-2024/internal/model/entity"
 	"context"
 	"fmt"
+
+	"backend-bootcamp-assignment-2024/internal/model/dto/request"
+	"backend-bootcamp-assignment-2024/internal/model/entity"
 )
 
 type SubscriberRepository interface {

@@ -3,12 +3,13 @@
 package service
 
 import (
+	"context"
+	"time"
+
 	"backend-bootcamp-assignment-2024/internal/mapper"
 	"backend-bootcamp-assignment-2024/internal/model/dto/request"
 	"backend-bootcamp-assignment-2024/internal/model/dto/response"
 	"backend-bootcamp-assignment-2024/internal/model/entity"
-	"context"
-	"time"
 )
 
 type HouseRepository interface {

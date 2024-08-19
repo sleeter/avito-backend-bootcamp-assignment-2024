@@ -1,14 +1,16 @@
 package handler
 
 import (
-	"backend-bootcamp-assignment-2024/internal/model/dto/request"
-	"backend-bootcamp-assignment-2024/internal/model/entity"
-	"backend-bootcamp-assignment-2024/internal/service"
 	"errors"
-	"github.com/gin-gonic/gin"
 	"log"
 	"net/http"
 	"slices"
+
+	"backend-bootcamp-assignment-2024/internal/model/dto/request"
+	"backend-bootcamp-assignment-2024/internal/model/entity"
+	"backend-bootcamp-assignment-2024/internal/service"
+
+	"github.com/gin-gonic/gin"
 )
 
 func CreateFlat(ctx *gin.Context, service *service.Service) error {

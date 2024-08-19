@@ -2,6 +2,7 @@ package core
 
 import (
 	"backend-bootcamp-assignment-2024/internal/pkg/web"
+
 	"github.com/spf13/viper"
 )
 

@@ -1,27 +1,27 @@
 package main
 
 import (
-	http_server "backend-bootcamp-assignment-2024/internal/http-server"
-	"backend-bootcamp-assignment-2024/internal/model/entity"
-	"backend-bootcamp-assignment-2024/internal/pkg/pgdb"
-	"backend-bootcamp-assignment-2024/internal/repository"
-	"backend-bootcamp-assignment-2024/internal/service"
-	"backend-bootcamp-assignment-2024/pkg/sender"
 	"context"
 	"database/sql"
 	"errors"
-	"github.com/hashicorp/golang-lru/v2/expirable"
-	"github.com/jackc/pgx/v4/pgxpool"
 	"log"
 	"time"
 
 	"backend-bootcamp-assignment-2024/internal/core"
+	http_server "backend-bootcamp-assignment-2024/internal/http-server"
+	"backend-bootcamp-assignment-2024/internal/model/entity"
 	"backend-bootcamp-assignment-2024/internal/pkg/config"
+	"backend-bootcamp-assignment-2024/internal/pkg/pgdb"
+	"backend-bootcamp-assignment-2024/internal/repository"
+	"backend-bootcamp-assignment-2024/internal/service"
+	"backend-bootcamp-assignment-2024/pkg/sender"
 
 	"github.com/avast/retry-go/v4"
 	"github.com/golang-migrate/migrate/v4"
 	"github.com/golang-migrate/migrate/v4/database/postgres"
 	_ "github.com/golang-migrate/migrate/v4/source/file"
+	"github.com/hashicorp/golang-lru/v2/expirable"
+	"github.com/jackc/pgx/v4/pgxpool"
 	_ "github.com/jackc/pgx/v4/stdlib"
 )
 

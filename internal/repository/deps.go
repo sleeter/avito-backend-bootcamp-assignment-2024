@@ -3,8 +3,10 @@
 package repository
 
 import (
-	"backend-bootcamp-assignment-2024/internal/model/entity"
 	"context"
+
+	"backend-bootcamp-assignment-2024/internal/model/entity"
+
 	sq "github.com/Masterminds/squirrel"
 	"github.com/jackc/pgx/v4"
 )

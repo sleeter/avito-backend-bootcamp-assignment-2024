@@ -1,16 +1,18 @@
 package auth
 
 import (
-	"backend-bootcamp-assignment-2024/internal/model/dto/request"
-	"backend-bootcamp-assignment-2024/internal/model/entity"
 	"errors"
 	"fmt"
-	"github.com/gin-gonic/gin"
-	"github.com/golang-jwt/jwt/v5"
 	"net/http"
 	"slices"
 	"strings"
 	"time"
+
+	"backend-bootcamp-assignment-2024/internal/model/dto/request"
+	"backend-bootcamp-assignment-2024/internal/model/entity"
+
+	"github.com/gin-gonic/gin"
+	"github.com/golang-jwt/jwt/v5"
 )
 
 func AuthModerMiddleware() gin.HandlerFunc {

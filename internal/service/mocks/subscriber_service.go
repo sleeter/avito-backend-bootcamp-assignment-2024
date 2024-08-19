@@ -5,10 +5,11 @@
 package mock_service
 
 import (
-	request "backend-bootcamp-assignment-2024/internal/model/dto/request"
-	entity "backend-bootcamp-assignment-2024/internal/model/entity"
 	context "context"
 	reflect "reflect"
+
+	request "backend-bootcamp-assignment-2024/internal/model/dto/request"
+	entity "backend-bootcamp-assignment-2024/internal/model/entity"
 
 	gomock "github.com/golang/mock/gomock"
 )

@@ -3,8 +3,9 @@
 package service
 
 import (
-	"backend-bootcamp-assignment-2024/internal/pkg/pgdb"
 	"context"
+
+	"backend-bootcamp-assignment-2024/internal/pkg/pgdb"
 )
 
 type TransactionManager interface {

@@ -5,9 +5,10 @@
 package mock_service
 
 import (
-	pgdb "backend-bootcamp-assignment-2024/internal/pkg/pgdb"
 	context "context"
 	reflect "reflect"
+
+	pgdb "backend-bootcamp-assignment-2024/internal/pkg/pgdb"
 
 	gomock "github.com/golang/mock/gomock"
 )

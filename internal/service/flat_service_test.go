@@ -1,17 +1,19 @@
 package service
 
 import (
+	"context"
+	"testing"
+	"time"
+
 	"backend-bootcamp-assignment-2024/internal/mapper"
 	"backend-bootcamp-assignment-2024/internal/model/dto/request"
 	"backend-bootcamp-assignment-2024/internal/model/dto/response"
 	"backend-bootcamp-assignment-2024/internal/model/entity"
 	mock_service "backend-bootcamp-assignment-2024/internal/service/mocks"
-	"context"
+
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"testing"
-	"time"
 )
 
 func TestFlatService_GetFlats(t *testing.T) {

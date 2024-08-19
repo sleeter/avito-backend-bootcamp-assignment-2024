@@ -3,19 +3,21 @@
 package tests
 
 import (
-	"backend-bootcamp-assignment-2024/internal/model/dto/request"
-	"backend-bootcamp-assignment-2024/internal/model/dto/response"
-	"backend-bootcamp-assignment-2024/internal/model/entity"
 	"context"
 	"encoding/json"
 	"fmt"
+	"net/http"
+	"testing"
+	"time"
+
+	"backend-bootcamp-assignment-2024/internal/model/dto/request"
+	"backend-bootcamp-assignment-2024/internal/model/dto/response"
+	"backend-bootcamp-assignment-2024/internal/model/entity"
+
 	"github.com/go-resty/resty/v2"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"github.com/stretchr/testify/suite"
-	"net/http"
-	"testing"
-	"time"
 )
 
 type ServerTestSuite struct {

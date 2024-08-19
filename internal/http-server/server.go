@@ -1,15 +1,17 @@
 package http_server
 
 import (
+	"context"
+	"net/http"
+
 	"backend-bootcamp-assignment-2024/internal/core"
 	"backend-bootcamp-assignment-2024/internal/http-server/handler"
 	"backend-bootcamp-assignment-2024/internal/model/dto/response"
 	"backend-bootcamp-assignment-2024/internal/pkg/auth"
 	"backend-bootcamp-assignment-2024/internal/pkg/web"
 	"backend-bootcamp-assignment-2024/internal/service"
-	"context"
+
 	"github.com/gin-gonic/gin"
-	"net/http"
 )
 
 type App struct {
