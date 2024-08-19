@@ -29,3 +29,8 @@ type House struct {
 	Year      int32   `json:"year" binding:"required"`
 	Developer *string `json:"developer"`
 }
+
+type Subscriber struct {
+	HouseId int32  `json:"house_id"`
+	Email   string `json:"email" binding:"required"`
+}
