@@ -60,11 +60,13 @@ func main() {
 	sService := service.NewSubscriberService(sRepo, tm, s)
 	fService := service.NewFlatService(fRepo, hService, sService, tm)
 	uService := service.NewUserService(uRepo, tm)
+
 	//TODO: server
 	app := http_server.New(&service.Service{
-		HouseService: hService,
-		FlatService:  fService,
-		UserService:  uService,
+		HouseService:      hService,
+		FlatService:       fService,
+		UserService:       uService,
+		SubscriberService: sService,
 	}, cfg)
 
 	if err := app.Start(ctx); err != nil {
