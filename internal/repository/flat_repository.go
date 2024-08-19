@@ -39,7 +39,7 @@ func (r *FlatRepository) executeQuery(ctx context.Context, query sq.Sqlizer) ([]
 
 func toFlat(rows pgx.Rows) (entity.Flat, error) {
 	var flat entity.Flat
-	err := rows.Scan(&flat.Id, &flat.HouseId, &flat.Number, &flat.Price, &flat.Rooms, &flat.Status)
+	err := rows.Scan(&flat.Id, &flat.HouseId, &flat.Price, &flat.Rooms, &flat.Status)
 	if err != nil {
 		return entity.Flat{}, err
 	}
@@ -64,7 +64,7 @@ func (r *FlatRepository) GetFlatsByHouseId(ctx context.Context, houseId int32, i
 func (r *FlatRepository) CreateFlat(ctx context.Context, flat request.CreateFlat) (*entity.Flat, error) {
 	q := sq.Insert("flats").
 		Columns("house_id", "price", "rooms", "status").
-		Values(flat.HouseId, flat.Price, flat.Rooms, flat.Status).
+		Values(flat.HouseId, flat.Price, *flat.Rooms, flat.Status).
 		Suffix("RETURNING *").PlaceholderFormat(sq.Dollar)
 	flats, err := r.executeQuery(ctx, q)
 	if err != nil {

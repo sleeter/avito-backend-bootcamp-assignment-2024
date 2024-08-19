@@ -31,10 +31,11 @@ func NewFlatService(fr FlatRepository, hr HouseRepository, manager TransactionMa
 
 func (s *FlatService) AddFlat(ctx context.Context, flat request.CreateFlat) (*response.Flat, error) {
 	flat.Status = entity.FLATSTATUS_CREATED
-	if flat.Rooms == 0 {
-		flat.Rooms = 1
+	if flat.Rooms == nil {
+		var rooms int32
+		rooms = 1
+		flat.Rooms = &rooms
 	}
-
 	var res entity.Flat
 	err := s.TransactionManager.Tx(ctx, func(ctx context.Context) error {
 		var err error
@@ -60,6 +61,10 @@ func (s *FlatService) AddFlat(ctx context.Context, flat request.CreateFlat) (*re
 }
 
 func (s *FlatService) UpdateFlat(ctx context.Context, flat request.UpdateFlat) (*response.Flat, error) {
+	if len(flat.Status) == 0 {
+		flat.Status = entity.FLATSTATUS_ON_MODERATION
+	}
+	//TODO: may be add check to created status befor update and response 409
 	res, err := s.FlatRepository.UpdateFlatStatus(ctx, flat)
 	if err != nil {
 		return nil, err

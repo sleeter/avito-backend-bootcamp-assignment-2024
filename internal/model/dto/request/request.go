@@ -16,7 +16,7 @@ type Login struct {
 type CreateFlat struct {
 	HouseId int32  `json:"house_id" binding:"required"`
 	Price   int32  `json:"price" binding:"required"`
-	Rooms   int32  `json:"rooms"`
+	Rooms   *int32 `json:"rooms"`
 	Status  string `json:"status"`
 }
 type UpdateFlat struct {
