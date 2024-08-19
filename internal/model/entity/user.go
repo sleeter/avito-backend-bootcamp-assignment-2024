@@ -5,10 +5,11 @@ type User struct {
 	Email    string `db:"email"`
 	Password string `db:"password"`
 	Type     string `db:"type"`
-	Dummy    bool   `db:"dummy"`
 }
 
 const (
 	USERTYPE_CLIENT    = "client"
 	USERTYPE_MODERATOR = "moderator"
 )
+
+var UserTypes = []string{USERTYPE_CLIENT, USERTYPE_MODERATOR}
