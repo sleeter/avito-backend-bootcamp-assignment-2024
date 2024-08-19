@@ -1,10 +1,14 @@
 package main
 
 import (
+	http_server "backend-bootcamp-assignment-2024/internal/http-server"
+	"backend-bootcamp-assignment-2024/internal/pkg/pgdb"
+	"backend-bootcamp-assignment-2024/internal/repository"
+	"backend-bootcamp-assignment-2024/internal/service"
 	"context"
 	"database/sql"
 	"errors"
-	"fmt"
+	"github.com/jackc/pgx/v4/pgxpool"
 	"time"
 
 	"backend-bootcamp-assignment-2024/internal/core"
@@ -28,18 +32,42 @@ func main() {
 	if err != nil {
 
 	}
+
 	//TODO: repo, migrations
 	err = retry.Do(func() error {
 		return UpMigrations(cfg)
 	}, retry.Attempts(4), retry.Delay(2*time.Second))
+	if err != nil {
+
+	}
+
+	pool, err := pgxpool.Connect(ctx, cfg.Storage.URL)
+	if err != nil {
+
+	}
+	qm := pgdb.NewQueryManager(pool)
+	tm := pgdb.NewTransactionManager(pool)
+
+	hRepo := repository.NewHouseRepository(qm)
+	fRepo := repository.NewFlatRepository(qm)
+	uRepo := repository.NewUserRepository(qm)
 
 	//TODO: service
-
+	hService := service.NewHouseService(hRepo, tm)
+	fService := service.NewFlatService(fRepo, hRepo, tm)
+	uService := service.NewUserService(uRepo, tm)
 	//TODO: server
+	app := http_server.New(&service.Service{
+		HouseService: hService,
+		FlatService:  fService,
+		UserService:  uService,
+	}, cfg)
+
+	if err := app.Start(ctx); err != nil {
+
+	}
 
 	//TODO: graceful shutdown
-
-	fmt.Println(ctx)
 }
 
 func UpMigrations(cfg *core.Config) error {
