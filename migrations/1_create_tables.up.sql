@@ -20,7 +20,7 @@ CREATE TABLE IF NOT EXISTS flats
 CREATE TABLE IF NOT EXISTS users
 (
   id uuid primary key,
-  email text not null,
+  email text unique not null,
   password text not null,
   type varchar(15) not null
 );
