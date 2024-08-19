@@ -43,11 +43,11 @@ func (s *FlatService) AddFlat(ctx context.Context, flat request.CreateFlat) (*re
 		var err error
 		res1, err := s.FlatRepository.CreateFlat(ctx, flat)
 
-		res = *res1
-
 		if err != nil {
 			return err
 		}
+
+		res = *res1
 
 		err = s.HouseService.UpdateHouse(ctx, flat.HouseId, time.Now())
 		if err != nil {
@@ -72,7 +72,7 @@ func (s *FlatService) UpdateFlat(ctx context.Context, flat request.UpdateFlat) (
 	if len(flat.Status) == 0 {
 		flat.Status = entity.FLATSTATUS_ON_MODERATION
 	}
-	//TODO: may be add check to created status befor update and response 409
+	//TODO: may be add check to created status before update and response 409
 	res, err := s.FlatRepository.UpdateFlatStatus(ctx, flat)
 	if err != nil {
 		return nil, err
@@ -89,6 +89,9 @@ func (s *FlatService) GetFlats(ctx context.Context, houseId int32, isModerator b
 	for _, flat := range res {
 		flatResponse := mapper.FlatEntityToFlatResponse(&flat)
 		flats = append(flats, *flatResponse)
+	}
+	if len(flats) == 0 {
+		return []response.Flat{}, nil
 	}
 	return flats, nil
 }
