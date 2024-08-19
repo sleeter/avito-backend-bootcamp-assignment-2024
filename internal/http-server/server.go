@@ -33,6 +33,10 @@ func (app *App) Start(ctx context.Context) error {
 	return app.Server.Run(ctx)
 }
 
+func (app *App) Stop(ctx context.Context) error {
+	return app.Server.Shutdown(ctx)
+}
+
 func (app *App) initRoutes() {
 	app.Router = gin.Default()
 

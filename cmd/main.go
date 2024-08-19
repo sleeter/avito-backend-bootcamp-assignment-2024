@@ -5,6 +5,9 @@ import (
 	"database/sql"
 	"errors"
 	"log"
+	"os"
+	"os/signal"
+	"syscall"
 	"time"
 
 	"backend-bootcamp-assignment-2024/internal/core"
@@ -26,7 +29,8 @@ import (
 )
 
 func main() {
-	ctx := context.Background()
+	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
+	defer stop()
 
 	loader := config.PrepareLoader(config.WithConfigPath("./config/config.yaml"))
 	cfg, err := core.ParseConfig(loader)
@@ -68,11 +72,20 @@ func main() {
 		SubscriberService: sService,
 	}, cfg)
 
+	go func() {
+		for {
+			select {
+			case <-ctx.Done():
+				app.Stop(ctx)
+				return
+			}
+		}
+	}()
+
 	if err := app.Start(ctx); err != nil {
 		log.Fatal(err)
 	}
 
-	//TODO: graceful shutdown
 }
 
 func UpMigrations(cfg *core.Config) error {
