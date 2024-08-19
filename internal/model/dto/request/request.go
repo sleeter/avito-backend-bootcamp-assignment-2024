@@ -13,17 +13,19 @@ type Login struct {
 	Password string `json:"password"`
 }
 
-type Flat struct {
-	Id      int32  `json:"id"`
-	HouseId int32  `json:"house_id"`
-	Price   int32  `json:"price"`
+type CreateFlat struct {
+	HouseId int32  `json:"house_id" binding:"required"`
+	Price   int32  `json:"price" binding:"required"`
 	Rooms   int32  `json:"rooms"`
 	Status  string `json:"status"`
 }
+type UpdateFlat struct {
+	Id     int32  `json:"id" binding:"required"`
+	Status string `json:"status"`
+}
 
 type House struct {
-	Address   string `json:"address"`
-	Year      int32  `json:"year"`
-	Developer string `json:"developer"`
-	Status    string `json:"status"`
+	Address   string  `json:"address" binding:"required"`
+	Year      int32   `json:"year" binding:"required"`
+	Developer *string `json:"developer"`
 }

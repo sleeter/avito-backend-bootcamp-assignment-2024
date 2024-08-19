@@ -1,10 +1,10 @@
 package entity
 
 type User struct {
-	Id       string `db:"user_id"`
+	Id       string `db:"id"`
 	Email    string `db:"email"`
 	Password string `db:"password"`
-	Type     string `db:"user_type"`
+	Type     string `db:"type"`
 	Dummy    bool   `db:"dummy"`
 }
 

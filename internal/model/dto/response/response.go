@@ -1,5 +1,7 @@
 package response
 
+import "time"
+
 type Register struct {
 	UserId string `json:"user_id"`
 }
@@ -22,9 +24,10 @@ type Flat struct {
 }
 
 type House struct {
-	Id        int32  `json:"id"`
-	Address   string `json:"address"`
-	Year      int32  `json:"year"`
-	CreatedAt string `json:"created_at"`
-	UpdatedAt string `json:"updated_at"`
+	Id        int32     `json:"id"`
+	Address   string    `json:"address"`
+	Year      int32     `json:"year"`
+	Developer *string   `json:"developer"`
+	CreatedAt time.Time `json:"created_at"`
+	UpdateAt  time.Time `json:"update_at"`
 }
