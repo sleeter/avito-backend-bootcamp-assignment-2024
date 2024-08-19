@@ -39,32 +39,35 @@ func (r *UserRepository) executeQuery(ctx context.Context, query sq.Sqlizer) ([]
 
 func toUser(rows pgx.Rows) (entity.User, error) {
 	var user entity.User
-	err := rows.Scan(&user.Id, &user.Email, &user.Password, &user.Type, &user.Dummy)
+	err := rows.Scan(&user.Id, &user.Email, &user.Password, &user.Type)
 	if err != nil {
 		return entity.User{}, err
 	}
 	return user, nil
 }
 
-func (r *UserRepository) CreateUser(ctx context.Context, id string, user request.Register) error {
+func (r *UserRepository) CreateUser(ctx context.Context, id string, user request.Register) (*entity.User, error) {
 	q := sq.Insert("users").
 		Columns("id", "email", "password", "type").
 		Values(id, user.Email, user.Password, user.UserType).
-		Suffix("RETURNING id").PlaceholderFormat(sq.Dollar)
-	_, err := r.executeQuery(ctx, q)
-	return err
+		Suffix("RETURNING *").PlaceholderFormat(sq.Dollar)
+	res, err := r.executeQuery(ctx, q)
+	if err != nil {
+		return nil, err
+	}
+	return &res[0], nil
 }
 
-func (r *UserRepository) GetById(ctx context.Context, id string) (entity.User, error) {
+func (r *UserRepository) GetById(ctx context.Context, id string) (*entity.User, error) {
 	q := sq.Select("*").From("users").
 		Where(sq.Eq{"id": id}).
 		PlaceholderFormat(sq.Dollar)
 	users, err := r.executeQuery(ctx, q)
 	if err != nil {
-		return entity.User{}, err
+		return nil, err
 	}
 	if len(users) != 1 {
-		return entity.User{}, errors.New("something went wrong with get user by id")
+		return nil, errors.New("something went wrong with get user by id")
 	}
-	return users[0], nil
+	return &users[0], nil
 }
