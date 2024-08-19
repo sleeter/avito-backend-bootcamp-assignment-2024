@@ -90,9 +90,6 @@ func (s *FlatService) UpdateFlat(ctx context.Context, flat request.UpdateFlat) (
 	return mapper.FlatEntityToFlatResponse(res), nil
 }
 func validRequestAndEntityStatus(flat request.UpdateFlat, ent entity.Flat) bool {
-	if flat.Status == ent.Status {
-		return true
-	}
 	if flat.Status == entity.FLATSTATUS_ON_MODERATION && ent.Status != entity.FLATSTATUS_CREATED {
 		return false
 	}
