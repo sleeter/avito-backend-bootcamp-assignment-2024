@@ -1,0 +1,1 @@
+CREATE INDEX IF NOT EXISTS flats_approved_by_house_id_idx ON flats(house_id, status) WHERE status = 'approved';

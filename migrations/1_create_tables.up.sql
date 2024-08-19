@@ -28,5 +28,5 @@ CREATE TABLE IF NOT EXISTS subscribers
 (
     id serial primary key,
     house_id int references houses(id),
-    email text not null
+    email text unique not null
 );
