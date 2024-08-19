@@ -51,7 +51,7 @@ func (r *FlatRepository) GetFlatsByHouseId(ctx context.Context, houseId int32, i
 		From("flats").
 		Where(sq.Eq{"house_id": houseId}).
 		PlaceholderFormat(sq.Dollar)
-	if isModerator {
+	if !isModerator {
 		q = q.Where(sq.Eq{"status": entity.FLATSTATUS_APPROVED})
 	}
 	flats, err := r.executeQuery(ctx, q)
