@@ -24,3 +24,9 @@ CREATE TABLE IF NOT EXISTS users
   password text not null,
   type varchar(15) not null
 );
+CREATE TABLE IF NOT EXISTS subscribers
+(
+    id serial primary key,
+    house_id int references houses(id),
+    email text not null
+);
