@@ -5,6 +5,7 @@ import (
 	"backend-bootcamp-assignment-2024/internal/pkg/pgdb"
 	"backend-bootcamp-assignment-2024/internal/repository"
 	"backend-bootcamp-assignment-2024/internal/service"
+	"backend-bootcamp-assignment-2024/pkg/sender"
 	"context"
 	"database/sql"
 	"errors"
@@ -51,10 +52,13 @@ func main() {
 	hRepo := repository.NewHouseRepository(qm)
 	fRepo := repository.NewFlatRepository(qm)
 	uRepo := repository.NewUserRepository(qm)
+	sRepo := repository.NewSubscriberRepository(qm)
 
 	//TODO: service
 	hService := service.NewHouseService(hRepo, tm)
-	fService := service.NewFlatService(fRepo, hRepo, tm)
+	s := sender.New()
+	sService := service.NewSubscriberService(sRepo, tm, s)
+	fService := service.NewFlatService(fRepo, hService, sService, tm)
 	uService := service.NewUserService(uRepo, tm)
 	//TODO: server
 	app := http_server.New(&service.Service{
