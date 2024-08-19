@@ -25,3 +25,15 @@ func HouseEntityToHouseResponse(house *entity.House) *response.House {
 		UpdateAt:  house.UpdateAt,
 	}
 }
+
+func UserEntityToRegisterResponse(user *entity.User) *response.Register {
+	return &response.Register{
+		UserId: user.Id,
+	}
+}
+
+func TokenToResponseLogin(token string) *response.Login {
+	return &response.Login{
+		Token: token,
+	}
+}
