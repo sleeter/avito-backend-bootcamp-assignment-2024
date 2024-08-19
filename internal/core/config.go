@@ -1,6 +1,7 @@
 package core
 
 import (
+	"backend-bootcamp-assignment-2024/internal/pkg/web"
 	"github.com/spf13/viper"
 )
 
@@ -9,7 +10,8 @@ type StorageConfig struct {
 }
 
 type Config struct {
-	Storage StorageConfig `yaml:"storage"`
+	Storage StorageConfig    `yaml:"storage"`
+	Server  web.ServerConfig `yaml:"server"`
 }
 
 func ParseConfig(loader *viper.Viper) (*Config, error) {
