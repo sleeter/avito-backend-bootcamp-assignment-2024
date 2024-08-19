@@ -1,8 +1,8 @@
 up:
-	docker-compose -f ./deployment/docker-compose.yaml up -d --build
+	docker-compose up -d --build
 
 stop:
-	docker-compose -f ./deployment/docker-compose.yaml stop
+	docker-compose stop
 
 down:
-	docker-compose -f ./deployment/docker-compose.yaml down
+	docker-compose down
