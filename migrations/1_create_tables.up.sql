@@ -11,8 +11,7 @@ CREATE TABLE IF NOT EXISTS houses
 CREATE TABLE IF NOT EXISTS flats
 (
   id serial primary key,
-  house_id int references house(id),
-  number serial,
+  house_id int references houses(id),
   price int not null check (price >= 0),
   rooms int not null check (rooms >= 1),
   status varchar(15) not null default 'created'
@@ -20,8 +19,8 @@ CREATE TABLE IF NOT EXISTS flats
 
 CREATE TABLE IF NOT EXISTS users
 (
-  user_id uuid primary key,
+  id uuid primary key,
   email text not null,
   password text not null,
-  user_type varchar(15) not null
+  type varchar(15) not null
 );
